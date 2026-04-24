@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>TrustScore — AI Credit Intelligence for Uganda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ══════════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  /* Brand */
+  --amber:#D4A017;--amber-l:#F5C842;--amber-d:#A07810;
+  --amber-glow:rgba(212,160,23,.14);--amber-subtle:rgba(212,160,23,.07);
+  /* Surfaces */
+  --void:#060A12;--base:#0B1220;--raised:#111B2E;--float:#172035;--hover:#1D2840;
+  /* Borders */
+  --rim:rgba(255,255,255,.06);--rim2:rgba(212,160,23,.2);--rim3:rgba(255,255,255,.12);
+  /* Text */
+  --ink:#ECF2FF;--ink2:#94A3C0;--ink3:#5A6E8A;--ink4:#3A4E68;
+  /* Semantic */
+  --go:#00C896;--go-d:#009B76;--go-bg:rgba(0,200,150,.08);--go-rim:rgba(0,200,150,.22);
+  --no:#F04040;--no-bg:rgba(240,64,64,.08);--no-rim:rgba(240,64,64,.22);
+  --sky:#4A90FF;--sky-bg:rgba(74,144,255,.09);
+  --violet:#8B68FF;--violet-bg:rgba(139,104,255,.09);
+  --coral:#FF7043;
+  /* Type */
+  --sans:'Plus Jakarta Sans',sans-serif;
+  --serif:'Instrument Serif',serif;
+  --mono:'IBM Plex Mono',monospace;
+  /* Radius */
+  --r4:4px;--r8:8px;--r12:12px;--r16:16px;--r20:20px;--r24:24px;--r32:32px;
+  /* Shadows */
+  --shadow-card:0 4px 32px rgba(0,0,0,.35);
+  --shadow-float:0 8px 48px rgba(0,0,0,.5);
+}
+
+html,body{height:100%;overflow-x:hidden;}
+body{font-family:var(--sans);background:var(--void);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px var(--amber-glow)}50%{box-shadow:0 0 40px rgba(212,160,23,.25)}}
+
+.fade-up{animation:fadeUp .4s cubic-bezier(.4,0,.2,1) both;}
+.fade-in{animation:fadeIn .3s ease both;}
+.spin{animation:spin 1s linear infinite;}
+
+/* ── PAGE SYSTEM ── */
+.page{display:none;min-height:100vh;}
+.page.active{display:flex;flex-direction:column;}
+#dash.active{display:block;}
+
+/* ════════════════════════════════════════════
+   LANDING PAGE
+════════════════════════════════════════════ */
+#land{
+  background:
+    radial-gradient(ellipse 140% 70% at 50% 0%,rgba(212,160,23,.06) 0%,transparent 60%),
+    radial-gradient(ellipse 80% 50% at 0% 100%,rgba(74,144,255,.04) 0%,transparent 50%),
+    var(--void);
+  align-items:center;justify-content:center;text-align:center;
+  padding:60px 24px 80px;min-height:100vh;
+}
+
+.land-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--amber-subtle);border:1px solid var(--rim2);
+  border-radius:50px;padding:6px 16px;font-size:12px;font-weight:600;
+  color:var(--amber-l);letter-spacing:.3px;margin-bottom:28px;
+}
+.land-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--amber-l);animation:pulse 2s infinite;}
+
+.land-wordmark{
+  font-family:var(--serif);font-size:clamp(52px,10vw,88px);
+  font-weight:400;font-style:italic;
+  background:linear-gradient(135deg,var(--amber-l) 0%,var(--amber) 40%,#8B5E00 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;margin-bottom:8px;letter-spacing:-2px;
+}
+
+.land-tagline{
+  font-size:clamp(16px,3vw,22px);font-weight:400;
+  color:var(--ink2);margin-bottom:32px;max-width:580px;line-height:1.6;
+}
+.land-tagline strong{color:var(--ink);font-weight:600;}
+
+/* Provider pills */
+.prov-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;}
+.prov{
+  padding:7px 16px;border-radius:24px;font-size:12px;font-weight:700;
+  display:flex;align-items:center;gap:6px;letter-spacing:.2px;
+}
+.prov-mtn{background:var(--amber);color:#000;}
+.prov-air{background:#CC0000;color:#fff;}
+
+/* How it works row */
+.how-row{display:flex;gap:0;justify-content:center;align-items:stretch;margin-bottom:48px;max-width:600px;}
+.how-step{flex:1;padding:16px 12px;text-align:center;position:relative;}
+.how-step:not(:last-child)::after{content:'→';position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--ink3);font-size:16px;}
+.how-n{width:32px;height:32px;border-radius:50%;background:var(--raised);border:1px solid var(--rim2);
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:600;
+  color:var(--amber);margin:0 auto 8px;}
+.how-t{font-size:11px;font-weight:600;color:var(--ink2);}
+
+/* CTA */
+.land-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:56px;}
+.btn-primary{
+  padding:14px 36px;background:var(--amber);color:#000;border:none;
+  border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;
+  font-family:var(--sans);transition:all .22s;letter-spacing:.2px;
+}
+.btn-primary:hover{background:var(--amber-l);transform:translateY(-2px);box-shadow:0 8px 40px var(--amber-glow);}
+.btn-secondary{
+  padding:14px 36px;background:transparent;color:var(--ink);
+  border:1.5px solid var(--rim3);border-radius:50px;
+  font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:all .22s;
+}
+.btn-secondary:hover{border-color:var(--amber);color:var(--amber);}
+
+/* Metrics strip */
+.metrics-strip{display:flex;gap:48px;flex-wrap:wrap;justify-content:center;}
+.metric .val{font-family:var(--mono);font-size:28px;font-weight:600;color:var(--amber-l);}
+.metric .lbl{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:1.2px;margin-top:3px;}
+
+/* ════════════════════════════════════════════
+   AUTH PAGES
+════════════════════════════════════════════ */
+#login,#reg{
+  background:
+    radial-gradient(ellipse at top left,rgba(212,160,23,.04) 0%,transparent 50%),
+    var(--void);
+  align-items:center;justify-content:center;padding:24px;
+}
+.auth-container{width:100%;max-width:420px;}
+.auth-header{text-align:center;margin-bottom:24px;}
+.auth-wordmark{font-family:var(--serif);font-size:28px;font-style:italic;color:var(--amber);letter-spacing:-1px;}
+.auth-headline{font-size:20px;font-weight:700;margin-top:16px;margin-bottom:4px;}
+.auth-sub{font-size:13px;color:var(--ink2);}
+.auth-panel{
+  background:var(--base);border:1px solid var(--rim);border-radius:var(--r20);
+  padding:32px 28px;box-shadow:var(--shadow-card);
+}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--ink3);margin-bottom:7px;}
+.field input,.field select{
+  width:100%;padding:11px 14px;
+  background:var(--raised);border:1px solid var(--rim);
+  border-radius:var(--r8);color:var(--ink);font-size:14px;
+  font-family:var(--sans);outline:none;transition:border .2s;
+}
+.field input:focus,.field select:focus{border-color:var(--amber);}
+.field select option{background:var(--raised);}
+.btn-auth{
+  width:100%;padding:13px;background:var(--amber);color:#000;
+  border:none;border-radius:var(--r8);font-size:15px;font-weight:700;
+  cursor:pointer;font-family:var(--sans);margin-top:4px;transition:background .2s;
+  letter-spacing:.2px;
+}
+.btn-auth:hover{background:var(--amber-l);}
+.auth-switch{text-align:center;margin-top:16px;font-size:13px;color:var(--ink2);}
+.auth-switch span{color:var(--amber);cursor:pointer;font-weight:600;}
+.auth-back{text-align:center;margin-top:10px;font-size:12px;color:var(--ink3);cursor:pointer;}
+.auth-back:hover{color:var(--ink2);}
+.msg-err{background:var(--no-bg);border:1px solid var(--no-rim);border-radius:var(--r8);
+  padding:9px 14px;font-size:12px;color:#FCA5A5;margin-bottom:14px;display:none;}
+.msg-ok{background:var(--go-bg);border:1px solid var(--go-rim);border-radius:var(--r8);
+  padding:9px 14px;font-size:12px;color:#6EE7B7;margin-bottom:14px;display:none;}
+
+/* ════════════════════════════════════════════
+   DASHBOARD SHELL
+════════════════════════════════════════════ */
+.topnav{
+  background:rgba(6,10,18,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--rim);
+  padding:0 24px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:500;
+}
+.topnav-brand{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--amber);letter-spacing:-0.5px;}
+.topnav-r{display:flex;align-items:center;gap:12px;}
+.topnav-user{display:flex;align-items:center;gap:10px;}
+.topnav-ava{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--amber),var(--amber-d));
+  color:#000;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:14px;flex-shrink:0;
+}
+.topnav-nm{font-size:13px;font-weight:600;line-height:1.2;}
+.topnav-pv{font-size:10px;color:var(--ink3);}
+.topnav-out{
+  background:var(--no-bg);border:1px solid var(--no-rim);
+  color:#FCA5A5;padding:5px 13px;border-radius:20px;
+  font-size:11px;font-weight:600;cursor:pointer;font-family:var(--sans);
+}
+
+/* Bottom nav (mobile) */
+.bottomnav{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;
+  background:rgba(6,10,18,.97);backdrop-filter:blur(20px);
+  border-top:1px solid var(--rim);
+  padding:8px 0 calc(8px + env(safe-area-inset-bottom));
+  grid-template-columns:repeat(5,1fr);
+}
+@media(max-width:768px){.bottomnav{display:grid;}}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;cursor:pointer;}
+.bnav-item .ni{font-size:20px;line-height:1;}
+.bnav-item .nl{font-size:9px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.3px;}
+.bnav-item.active .ni{transform:scale(1.1);}
+.bnav-item.active .nl{color:var(--amber);}
+
+/* Desktop tab strip */
+.tabnav{
+  display:none;gap:2px;margin-bottom:16px;
+  background:var(--base);border:1px solid var(--rim);border-radius:var(--r12);padding:3px;
+}
+@media(min-width:769px){.tabnav{display:flex;}}
+.tab-btn{
+  flex:1;padding:9px 8px;text-align:center;cursor:pointer;
+  border-radius:10px;font-size:12px;font-weight:600;color:var(--ink3);
+  transition:all .2s;white-space:nowrap;
+}
+.tab-btn.active{background:var(--amber);color:#000;}
+
+/* Content scroll area */
+.dash-scroll{padding-bottom:88px;}
+@media(min-width:769px){.dash-scroll{padding-bottom:24px;}}
+.dash-body{padding:18px;max-width:1080px;margin:0 auto;}
+
+/* Panes */
+.pane{display:none;}
+.pane.active{display:block;animation:fadeUp .35s cubic-bezier(.4,0,.2,1) both;}
+
+/* ════════════════════════════════════════════
+   SCORE HERO SECTION
+════════════════════════════════════════════ */
+.score-hero{
+  background:linear-gradient(135deg,#0D1E38 0%,#142844 60%,#0D1E38 100%);
+  border:1px solid var(--rim2);border-radius:var(--r24);
+  padding:28px;margin-bottom:16px;
+  display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;
+  box-shadow:var(--shadow-card);
+}
+@media(max-width:520px){.score-hero{grid-template-columns:1fr;}}
+.sh-left h2{font-size:18px;font-weight:700;margin-bottom:4px;}
+.sh-left p{font-size:12px;color:var(--ink2);}
+.sh-btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.btn-upload{
+  padding:10px 22px;background:var(--amber);color:#000;
+  border:none;border-radius:30px;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:var(--sans);transition:all .2s;white-space:nowrap;
+}
+.btn-upload:hover{background:var(--amber-l);box-shadow:0 4px 24px var(--amber-glow);}
+.btn-ghost{
+  padding:10px 18px;background:transparent;color:var(--ink2);
+  border:1px solid var(--rim3);border-radius:30px;
+  font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--amber);color:var(--amber);}
+
+/* Score ring right side */
+.sh-right{text-align:center;min-width:120px;}
+.score-display .score-num{
+  font-family:var(--mono);font-size:62px;font-weight:600;line-height:1;
+  transition:color .4s;
+}
+.score-num.gold{color:var(--amber-l);}
+.score-num.silver{color:#90CAF9;}
+.score-num.bronze{color:#FBA144;}
+.score-num.none{color:var(--no);}
+.score-tier{
+  display:inline-block;padding:4px 14px;border-radius:20px;
+  font-size:10px;font-weight:700;margin-top:6px;letter-spacing:.5px;text-transform:uppercase;
+}
+.tier-gold{background:rgba(212,160,23,.15);color:var(--amber-l);border:1px solid rgba(212,160,23,.3);}
+.tier-silver{background:rgba(144,202,249,.12);color:#90CAF9;border:1px solid rgba(144,202,249,.25);}
+.tier-bronze{background:rgba(251,161,68,.12);color:#FBA144;border:1px solid rgba(251,161,68,.25);}
+.tier-none{background:var(--no-bg);color:var(--no);border:1px solid var(--no-rim);}
+
+/* Screenshot progress dots */
+.shot-progress{display:flex;align-items:center;gap:6px;margin-top:10px;}
+.shot-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.08);transition:all .3s;}
+.shot-dot.filled{background:var(--amber);}
+.shot-label{font-size:11px;color:var(--ink3);margin-left:4px;}
+
+/* ════════════════════════════════════════════
+   KPIS
+════════════════════════════════════════════ */
+.kpi-grid{
+  display:grid;gap:10px;margin-bottom:16px;
+  grid-template-columns:repeat(2,1fr);
+}
+@media(min-width:480px){.kpi-grid{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:900px){.kpi-grid{grid-template-columns:repeat(6,1fr);}}
+.kpi-card{
+  background:var(--base);border:1px solid var(--rim);border-radius:var(--r12);
+  padding:14px 15px;transition:border .2s;
+}
+.kpi-card:hover{border-color:var(--rim3);}
+.kpi-icon{font-size:18px;margin-bottom:8px;}
+.kpi-value{font-family:var(--mono);font-size:15px;font-weight:600;line-height:1.2;}
+.kpi-label{font-size:10px;color:var(--ink3);margin-top:3px;text-transform:uppercase;letter-spacing:.7px;}
+
+/* ════════════════════════════════════════════
+   CARDS
+════════════════════════════════════════════ */
+.card{
+  background:var(--base);border:1px solid var(--rim);border-radius:var(--r16);
+  padding:20px;margin-bottom:12px;box-shadow:var(--shadow-card);
+}
+.card-title{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--ink3);margin-bottom:16px;
+}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:767px){.two-col{grid-template-columns:1fr;}}
+
+/* ════════════════════════════════════════════
+   BREAKDOWN BARS
+════════════════════════════════════════════ */
+.bd-row{margin-bottom:15px;}
+.bd-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.bd-label{font-size:12px;font-weight:500;color:var(--ink2);}
+.bd-pct{font-family:var(--mono);font-size:12px;font-weight:600;}
+.bd-track{background:rgba(255,255,255,.05);border-radius:3px;height:6px;overflow:hidden;}
+.bd-fill{height:100%;border-radius:3px;transition:width 1.5s cubic-bezier(.4,0,.2,1);}
+
+/* ════════════════════════════════════════════
+   SPLIT BAR
+════════════════════════════════════════════ */
+.split-note{font-size:11px;color:var(--ink3);margin-bottom:8px;}
+.split-track{height:10px;border-radius:5px;overflow:hidden;display:flex;margin-bottom:10px;}
+.split-income{background:linear-gradient(90deg,var(--go),var(--go-d));}
+.split-spend{background:linear-gradient(90deg,#D03030,var(--no));}
+.split-legend{display:flex;gap:20px;flex-wrap:wrap;}
+.split-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;}
+
+/* ════════════════════════════════════════════
+   CHART
+════════════════════════════════════════════ */
+.chart-wrap{height:130px;position:relative;}
+
+/* ════════════════════════════════════════════
+   TIPS GRID
+════════════════════════════════════════════ */
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;}
+.tip-card{
+  background:rgba(212,160,23,.04);border:1px solid rgba(212,160,23,.08);
+  border-radius:var(--r12);padding:15px;
+}
+.tip-icon{font-size:22px;margin-bottom:8px;}
+.tip-title{font-size:12px;font-weight:700;margin-bottom:4px;color:var(--ink);}
+.tip-body{font-size:11px;color:var(--ink2);line-height:1.65;}
+
+/* ════════════════════════════════════════════
+   LOAN TAB
+════════════════════════════════════════════ */
+.loan-verdict{border-radius:var(--r16);padding:24px;margin-bottom:12px;}
+.loan-verdict.approved{
+  background:linear-gradient(135deg,rgba(0,200,150,.07),rgba(0,200,150,.02));
+  border:1px solid var(--go-rim);
+}
+.loan-verdict.declined{
+  background:linear-gradient(135deg,var(--no-bg),rgba(240,64,64,.02));
+  border:1px solid var(--no-rim);
+}
+.loan-verdict-status{font-size:14px;font-weight:700;margin-bottom:6px;}
+.loan-amount{
+  font-family:var(--mono);font-size:40px;font-weight:600;
+  color:var(--amber-l);margin:8px 0 4px;line-height:1;
+}
+.loan-basis{font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:18px;}
+.loan-details-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+@media(max-width:400px){.loan-details-grid{grid-template-columns:repeat(2,1fr);}}
+.loan-detail{background:rgba(255,255,255,.04);border-radius:var(--r8);padding:12px;text-align:center;}
+.ld-value{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--amber-l);}
+.ld-label{font-size:9px;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-top:3px;}
+
+/* Income analysis block */
+.income-analysis{
+  background:rgba(212,160,23,.04);border:1px solid rgba(212,160,23,.1);
+  border-radius:var(--r12);padding:16px;margin-bottom:12px;
+}
+.ia-title{font-size:12px;font-weight:700;color:var(--amber);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.ia-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;}
+.ia-row:last-child{border-bottom:none;}
+.ia-label{color:var(--ink2);}
+.ia-value{font-family:var(--mono);font-weight:600;}
+
+/* Calculator */
+.calc-section{background:var(--base);border:1px solid var(--rim);border-radius:var(--r16);padding:20px;margin-bottom:12px;}
+.range-wrap{margin:12px 0;}
+input[type=range]{width:100%;appearance: none;-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,.08);outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--amber);cursor:pointer;box-shadow:0 0 0 3px var(--amber-glow);}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--amber);cursor:pointer;border:none;}
+.range-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-top:4px;}
+.calc-result{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.calc-item{background:var(--raised);border-radius:var(--r8);padding:12px;text-align:center;}
+.ci-v{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--amber-l);}
+.ci-l{font-size:9px;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-top:3px;}
+
+/* ════════════════════════════════════════════
+   TRANSACTIONS
+════════════════════════════════════════════ */
+.searchbar{
+  display:flex;align-items:center;gap:8px;
+  background:var(--raised);border:1px solid var(--rim);border-radius:var(--r8);
+  padding:10px 14px;margin-bottom:14px;
+}
+.searchbar input{flex:1;background:none;border:none;color:var(--ink);font-family:var(--sans);font-size:13px;outline:none;}
+.searchbar input::placeholder{color:var(--ink3);}
+
+/* Desktop table */
+.tbl-wrap{overflow-x:auto;}
+.txn-table{width:100%;border-collapse:collapse;font-size:12px;}
+.txn-table th{color:var(--ink3);text-align:left;padding:8px 14px;border-bottom:1px solid var(--rim);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;}
+.txn-table td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.03);}
+.txn-table tbody tr:hover td{background:rgba(255,255,255,.02);}
+@media(max-width:768px){.tbl-wrap{display:none;}}
+
+/* Mobile cards */
+.txn-cards{display:none;flex-direction:column;gap:8px;}
+@media(max-width:768px){.txn-cards{display:flex;}}
+.txn-card-mob{
+  background:var(--raised);border:1px solid var(--rim);border-radius:var(--r12);
+  padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.tcm-left{display:flex;align-items:center;gap:12px;}
+.tcm-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.tcm-icon.credit{background:var(--go-bg);}
+.tcm-icon.debit{background:var(--no-bg);}
+.tcm-desc{font-size:12px;font-weight:600;line-height:1.3;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tcm-date{font-size:10px;color:var(--ink3);margin-top:2px;}
+.tcm-amt{font-family:var(--mono);font-size:14px;font-weight:600;text-align:right;}
+
+/* Shared pills */
+.type-badge{padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;}
+.type-badge.credit{background:var(--go-bg);color:var(--go);}
+.type-badge.debit{background:var(--no-bg);color:var(--no);}
+.src-badge{padding:2px 7px;border-radius:8px;font-size:9px;font-weight:700;}
+.src-badge.image{background:var(--violet-bg);color:#B8A0FF;}
+.src-badge.csv{background:var(--sky-bg);color:#80B4FF;}
+
+/* ════════════════════════════════════════════
+   HISTORY
+════════════════════════════════════════════ */
+.hist-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;background:var(--raised);border:1px solid var(--rim);
+  border-radius:var(--r12);margin-bottom:8px;transition:background .15s;cursor:default;
+}
+.hist-row:hover{background:var(--hover);}
+.hist-left{display:flex;align-items:center;gap:14px;}
+.hist-score{font-family:var(--mono);font-size:26px;font-weight:600;}
+.hist-trend-arrow{font-size:14px;margin-left:2px;}
+.hist-meta{font-size:11px;color:var(--ink3);margin-top:2px;line-height:1.5;}
+.hist-right{text-align:right;}
+.hist-date{font-size:10px;color:var(--ink3);}
+.hist-shots{font-size:10px;color:var(--ink3);margin-top:2px;}
+
+/* ════════════════════════════════════════════
+   PROFILE
+════════════════════════════════════════════ */
+.profile-hero{
+  background:linear-gradient(135deg,#0C1E38,#152C4E);
+  border:1px solid var(--rim2);border-radius:var(--r20);
+  padding:24px;display:flex;align-items:center;gap:18px;margin-bottom:12px;
+}
+.profile-avatar{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,var(--amber),var(--amber-d));
+  color:#000;display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:800;flex-shrink:0;
+}
+.profile-hero h3{font-size:19px;font-weight:700;}
+.profile-hero p{font-size:12px;color:var(--ink2);margin-top:2px;}
+.profile-tier-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;margin-top:8px;}
+
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--rim);font-size:13px;}
+.data-row:last-child{border-bottom:none;}
+.dr-label{color:var(--ink2);}
+.dr-value{font-weight:600;}
+
+/* Toggle */
+.toggle-wrap{display:flex;align-items:center;gap:8px;}
+.toggle{position:relative;width:42px;height:23px;display:inline-block;cursor:pointer;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.08);border-radius:12px;transition:.3s;}
+.toggle-slider::before{content:'';position:absolute;width:17px;height:17px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s;}
+.toggle input:checked+.toggle-slider{background:var(--amber);}
+.toggle input:checked+.toggle-slider::before{transform:translateX(19px);}
+
+/* Achievement */
+.ach-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--rim);}
+.ach-row:last-child{border-bottom:none;}
+.ach-icon{font-size:26px;flex-shrink:0;}
+.ach-title{font-size:12px;font-weight:700;}
+.ach-desc{font-size:11px;color:var(--ink2);margin-top:2px;}
+
+.btn-danger-full{
+  width:100%;padding:13px;background:var(--no-bg);border:1px solid var(--no-rim);
+  color:#FCA5A5;border-radius:var(--r8);font-size:14px;font-weight:600;
+  cursor:pointer;font-family:var(--sans);margin-top:12px;transition:all .2s;
+}
+.btn-danger-full:hover{background:rgba(240,64,64,.16);}
+
+/* ════════════════════════════════════════════
+   EMPTY + LOADING STATES
+════════════════════════════════════════════ */
+.empty-state{text-align:center;padding:36px 24px;color:var(--ink3);}
+.empty-state .es-icon{font-size:40px;margin-bottom:12px;}
+.empty-state p{font-size:13px;line-height:1.6;}
+.loading-ring{width:36px;height:36px;border:3px solid rgba(255,255,255,.06);border-top-color:var(--amber);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;}
+
+/* ════════════════════════════════════════════
+   UPLOAD WIZARD MODAL
+════════════════════════════════════════════ */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:700;
+  align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+@media(min-width:600px){.modal-overlay{align-items:center;padding:20px;}}
+.modal-overlay.open{display:flex;}
+
+.wizard{
+  background:var(--base);border:1px solid var(--rim);
+  border-radius:var(--r24) var(--r24) 0 0;
+  padding:0;width:100%;max-width:580px;
+  max-height:94vh;overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:var(--shadow-float);
+}
+@media(min-width:600px){.wizard{border-radius:var(--r24);max-height:90vh;}}
+.wizard-handle{width:40px;height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin:16px auto 0;}
+@media(min-width:600px){.wizard-handle{display:none;}}
+
+/* Wizard header */
+.wiz-header{padding:20px 24px 0;}
+.wiz-title{font-size:17px;font-weight:700;margin-bottom:3px;}
+.wiz-sub{font-size:12px;color:var(--ink2);}
+
+/* Source tabs */
+.src-tabs{display:flex;gap:4px;margin:16px 24px 0;background:rgba(255,255,255,.03);border-radius:var(--r8);padding:3px;}
+.src-tab{flex:1;padding:10px;text-align:center;cursor:pointer;border-radius:7px;font-size:12px;font-weight:700;color:var(--ink3);transition:all .2s;}
+.src-tab.active{background:var(--amber);color:#000;}
+
+/* Wizard body */
+.wiz-body{padding:16px 24px;overflow-y:auto;flex:1;}
+.wiz-panel{display:none;}
+.wiz-panel.active{display:block;}
+
+/* Info boxes */
+.infobox{border-radius:var(--r8);padding:12px 14px;font-size:12px;margin-bottom:14px;line-height:1.65;}
+.infobox-title{font-weight:700;font-size:13px;margin-bottom:3px;}
+.infobox.purple{background:var(--violet-bg);border:1px solid rgba(139,104,255,.25);color:#C4B5FD;}
+.infobox.blue{background:var(--sky-bg);border:1px solid rgba(74,144,255,.25);color:#93C5FD;}
+.infobox code{display:block;background:rgba(0,0,0,.35);border-radius:6px;padding:8px;margin-top:6px;font-family:var(--mono);font-size:11px;color:var(--ink);white-space:pre;}
+
+/* Screenshot upload grid */
+.screenshots-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px;
+}
+@media(max-width:480px){.screenshots-grid{grid-template-columns:repeat(3,1fr);}}
+
+.shot-slot{
+  aspect-ratio:1;border:2px dashed rgba(212,160,23,.2);
+  border-radius:var(--r12);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;overflow:hidden;transition:all .22s;
+  background:var(--amber-subtle);
+  -webkit-user-select:none;user-select:none;
+}
+.shot-slot:hover{border-color:var(--amber);background:rgba(212,160,23,.09);}
+.shot-slot.has-image{border:2px solid var(--amber);background:rgba(212,160,23,.08);}
+.slot-placeholder{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.slot-placeholder .si{font-size:22px;}
+.slot-placeholder .sn{font-size:9px;color:var(--ink3);font-weight:600;}
+.slot-preview{display:none;position:absolute;inset:0;}
+.shot-slot.has-image .slot-preview{display:block;width:100%;height:100%;object-fit:cover;}
+.shot-slot.has-image .slot-placeholder{display:none;}
+.slot-remove{
+  display:none;position:absolute;top:3px;right:3px;
+  background:var(--no);color:#fff;border:none;border-radius:50%;
+  width:20px;height:20px;font-size:11px;font-weight:700;cursor:pointer;
+  align-items:center;justify-content:center;z-index:2;
+}
+.shot-slot.has-image .slot-remove{display:flex;}
+.slot-file-input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:1;}
+.shot-slot.has-image .slot-file-input{display:none;}
+
+/* Progress pill */
+.upload-progress{
+  background:rgba(255,255,255,.04);border:1px solid var(--rim);border-radius:var(--r8);
+  padding:12px 15px;margin-bottom:14px;
+}
+.up-count{font-size:13px;font-weight:600;color:var(--ink);}
+.up-count .num{color:var(--amber);font-family:var(--mono);}
+.up-hint{font-size:11px;color:var(--ink3);margin-top:3px;}
+.up-bar-track{background:rgba(255,255,255,.05);border-radius:3px;height:4px;margin-top:8px;overflow:hidden;}
+.up-bar-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--amber-l));border-radius:3px;transition:width .4s;}
+
+/* CSV drop */
+.drop-area{
+  border:2px dashed rgba(212,160,23,.2);border-radius:var(--r12);
+  padding:28px;text-align:center;cursor:pointer;
+  position:relative;transition:all .22s;margin-bottom:14px;
+}
+.drop-area:hover{border-color:var(--amber);background:var(--amber-subtle);}
+.drop-area input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:1;}
+.da-icon{font-size:36px;margin-bottom:8px;}
+.da-title{font-size:14px;font-weight:600;}
+.da-sub{font-size:11px;color:var(--ink3);margin-top:5px;}
+.selected-file{
+  display:none;align-items:center;gap:10px;
+  background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.18);
+  border-radius:var(--r8);padding:11px 14px;margin-bottom:14px;
+}
+.selected-file.visible{display:flex;}
+.sf-name{font-size:12px;font-weight:600;color:var(--amber-l);flex:1;}
+.sf-size{font-size:10px;color:var(--ink3);margin-top:1px;}
+.sf-clear{cursor:pointer;color:var(--no);font-size:18px;flex-shrink:0;}
+
+/* Processing state */
+.processing-overlay{
+  display:none;padding:24px 0;text-align:center;
+}
+.po-steps{margin-top:14px;text-align:left;}
+.po-step{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:12px;color:var(--ink3);}
+.po-step.active{color:var(--amber);}
+.po-step.done{color:var(--go);}
+.po-dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.po-step.active .po-dot{animation:pulse 1s infinite;}
+.po-progress{background:rgba(255,255,255,.05);border-radius:3px;height:4px;margin-top:14px;overflow:hidden;}
+.po-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--amber-l));border-radius:3px;transition:width .4s;}
+
+/* Per-screenshot results */
+.shot-results-list{margin-bottom:14px;}
+.shot-result{
+  display:flex;align-items:center;gap:10px;padding:8px 12px;
+  border-radius:var(--r8);margin-bottom:5px;font-size:12px;
+}
+.shot-result.ok{background:var(--go-bg);border:1px solid var(--go-rim);}
+.shot-result.fail{background:var(--no-bg);border:1px solid var(--no-rim);}
+.sr-status{font-size:14px;flex-shrink:0;}
+.sr-name{flex:1;font-weight:600;}
+.sr-count{font-family:var(--mono);font-size:11px;color:var(--ink2);}
+
+/* Wizard footer */
+.wiz-footer{padding:14px 24px 20px;border-top:1px solid var(--rim);display:flex;gap:10px;flex-shrink:0;}
+.btn-cancel{flex:1;padding:12px;background:transparent;color:var(--ink2);border:1px solid var(--rim);border-radius:var(--r8);cursor:pointer;font-size:13px;font-family:var(--sans);}
+.btn-analyze{flex:2;padding:12px;background:var(--amber);color:#000;border:none;border-radius:var(--r8);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .2s;}
+.btn-analyze:hover{background:var(--amber-l);}
+.btn-analyze:disabled{opacity:.4;cursor:not-allowed;}
+.err-box{background:var(--no-bg);border:1px solid var(--no-rim);border-radius:var(--r8);padding:10px 14px;font-size:12px;color:#FCA5A5;margin-bottom:12px;display:none;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ LANDING ═══════════════════ -->
+<div id="land" class="page active">
+  <div class="land-badge"><span class="dot"></span> Now analyzing up to 5 months of transactions</div>
+  <div class="land-wordmark">TrustScore</div>
+  <p class="land-tagline">
+    The AI credit intelligence platform built for <strong>Uganda.</strong><br>
+    No collateral. No bank statements. Just your mobile money.
+  </p>
+  <div class="prov-row">
+    <span class="prov prov-mtn">📱 MTN Mobile Money</span>
+    <span class="prov prov-air">📱 Airtel Money</span>
+  </div>
+  <div class="how-row">
+    <div class="how-step"><div class="how-n">1</div><div class="how-t">Upload 5 screenshots</div></div>
+    <div class="how-step"><div class="how-n">2</div><div class="how-t">AI reads &amp; analyzes</div></div>
+    <div class="how-step"><div class="how-n">3</div><div class="how-t">Get your score</div></div>
+    <div class="how-step"><div class="how-n">4</div><div class="how-t">Receive loan offer</div></div>
+  </div>
+  <div class="land-cta">
+    <button class="btn-primary" onclick="showPage('reg')">Get Your Credit Score →</button>
+    <button class="btn-secondary" onclick="showPage('login')">Sign In</button>
+  </div>
+  <div class="metrics-strip">
+    <div class="metric"><div class="val">5</div><div class="lbl">Months of Data</div></div>
+    <div class="metric"><div class="val">6</div><div class="lbl">AI Factors</div></div>
+    <div class="metric"><div class="val">100%</div><div class="lbl">Offline OCR</div></div>
+    <div class="metric"><div class="val">0 UGX</div><div class="lbl">No Collateral</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ REGISTER ═══════════════════ -->
+<div id="reg" class="page">
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="auth-wordmark">TrustScore</div>
+      <div class="auth-headline">Create your account</div>
+      <div class="auth-sub">Start building your AI credit profile today</div>
+    </div>
+    <div class="auth-panel">
+      <div class="msg-err" id="rErr"></div>
+      <div class="msg-ok"  id="rOk"></div>
+      <div class="field"><label>Full Name</label><input id="rName" placeholder="e.g. Treavour Kent" autocomplete="name"></div>
+      <div class="field"><label>Phone Number</label><input id="rPhone" type="tel" placeholder="e.g. 0771234567"></div>
+      <div class="field"><label>Mobile Money Provider</label>
+        <select id="rProv"><option value="MTN">MTN Mobile Money</option><option value="Airtel">Airtel Money</option></select>
+      </div>
+      <div class="field"><label>Password</label><input id="rPass" type="password" placeholder="Create a secure password"></div>
+      <button class="btn-auth" onclick="doRegister()">Create Account →</button>
+      <div class="auth-switch">Already have an account? <span onclick="showPage('login')">Sign in</span></div>
+      <div class="auth-back" onclick="showPage('land')">← Back to home</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ LOGIN ═══════════════════ -->
+<div id="login" class="page">
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="auth-wordmark">TrustScore</div>
+      <div class="auth-headline">Welcome back</div>
+      <div class="auth-sub">Sign in to your account</div>
+    </div>
+    <div class="auth-panel">
+      <div class="msg-err" id="lErr"></div>
+      <div class="field"><label>Phone Number</label><input id="lPhone" type="tel" placeholder="e.g. 0771234567"></div>
+      <div class="field"><label>Password</label><input id="lPass" type="password" placeholder="Your password"></div>
+      <button class="btn-auth" onclick="doLogin()">Sign In →</button>
+      <div class="auth-switch">No account? <span onclick="showPage('reg')">Create one</span></div>
+      <div class="auth-back" onclick="showPage('land')">← Back to home</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ DASHBOARD ═══════════════════ -->
+<div id="dash" class="page">
+  <!-- Topnav -->
+  <nav class="topnav">
+    <div class="topnav-brand">TrustScore</div>
+    <div class="topnav-r">
+      <div class="topnav-user">
+        <div><div class="topnav-nm" id="tnName">—</div><div class="topnav-pv" id="tnProv">—</div></div>
+        <div class="topnav-ava" id="tnAva">?</div>
+      </div>
+      <button class="topnav-out" onclick="doLogout()">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="dash-scroll">
+    <div class="dash-body">
+
+      <!-- Score Hero -->
+      <div class="score-hero fade-up">
+        <div class="sh-left">
+          <h2 id="shGreeting">Good day</h2>
+          <p id="shSub">Upload 5 monthly screenshots to get your AI credit score &amp; loan offer</p>
+          <div class="sh-btns">
+            <button class="btn-upload" onclick="openWizard()">📷 Upload Screenshots</button>
+            <button class="btn-ghost" onclick="openWizard('csv')">📄 Use CSV</button>
+          </div>
+          <div class="shot-progress" id="shotProgress" style="display:none">
+            <div id="shotDotRow"></div>
+            <span class="shot-label" id="shotLabel"></span>
+          </div>
+        </div>
+        <div class="sh-right">
+          <div class="score-display">
+            <div class="score-num none" id="scoreNum">—</div>
+            <div id="scoreTierWrap"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-grid fade-up" style="animation-delay:.05s">
+        <div class="kpi-card"><div class="kpi-icon">💰</div><div class="kpi-value" id="kpiInc" style="color:var(--go)">—</div><div class="kpi-label">Avg Income / Screenshot</div></div>
+        <div class="kpi-card"><div class="kpi-icon">💸</div><div class="kpi-value" id="kpiSpd" style="color:var(--no)">—</div><div class="kpi-label">Avg Spend / Screenshot</div></div>
+        <div class="kpi-card"><div class="kpi-icon">🏦</div><div class="kpi-value" id="kpiSav" style="color:var(--amber-l)">—</div><div class="kpi-label">Net Savings</div></div>
+        <div class="kpi-card"><div class="kpi-icon">🔄</div><div class="kpi-value" id="kpiTxn" style="color:#B8A0FF">—</div><div class="kpi-label">Transactions</div></div>
+        <div class="kpi-card"><div class="kpi-icon">📷</div><div class="kpi-value" id="kpiShot" style="color:#80B4FF">—</div><div class="kpi-label">Screenshots Used</div></div>
+        <div class="kpi-card"><div class="kpi-icon">📊</div><div class="kpi-value" id="kpiScan" style="color:#FF9F7F">—</div><div class="kpi-label">Total Analyses</div></div>
+      </div>
+
+      <!-- Desktop tab strip -->
+      <div class="tabnav fade-up" style="animation-delay:.1s">
+        <button class="tab-btn active" onclick="goTab('overview',this)">Overview</button>
+        <button class="tab-btn" onclick="goTab('loan',this)">Loan</button>
+        <button class="tab-btn" onclick="goTab('transactions',this)">Transactions</button>
+        <button class="tab-btn" onclick="goTab('history',this)">History</button>
+        <button class="tab-btn" onclick="goTab('profile',this)">Profile</button>
+      </div>
+
+      <!-- ── OVERVIEW ── -->
+      <div id="pane-overview" class="pane active">
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">AI Score Breakdown — 6 Factors</div>
+            <div id="bdWrap">
+              <div class="empty-state"><div class="es-icon">📊</div><p>Upload screenshots to see your detailed score breakdown across all 6 financial factors.</p></div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-title">Income vs Spending</div>
+              <div id="splitWrap">
+                <div class="empty-state" style="padding:20px"><div class="es-icon">📉</div><p>No data yet</p></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">Score Trend</div>
+              <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">💡 Personalised AI Recommendations</div>
+          <div class="tips-grid" id="tipsWrap">
+            <div class="empty-state"><div class="es-icon">💡</div><p>Personalised tips will appear after your first analysis.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── LOAN ── -->
+      <div id="pane-loan" class="pane">
+        <div id="loanWrap">
+          <div class="empty-state" style="padding:48px">
+            <div class="es-icon">💳</div>
+            <p>Upload 5 screenshots to receive a personalised loan offer calculated from your verified income.</p>
+            <button class="btn-upload" style="margin-top:18px" onclick="openWizard()">Upload Screenshots</button>
+          </div>
+        </div>
+        <div id="calcWrap" style="display:none">
+          <div class="calc-section">
+            <div class="card-title">🧮 Repayment Calculator</div>
+            <p style="font-size:12px;color:var(--ink2);margin-bottom:12px">Drag to explore different loan amounts within your approved range:</p>
+            <div class="range-wrap">
+              <input type="range" id="loanSlider" min="50000" max="10000000" step="10000" value="500000" oninput="updateCalc()">
+              <div class="range-labels"><span>UGX 50,000</span><span id="sliderLabel" style="color:var(--amber);font-weight:600">UGX 500,000</span><span id="sliderMax">UGX 10M</span></div>
+            </div>
+            <div class="calc-result" id="calcResult"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TRANSACTIONS ── -->
+      <div id="pane-transactions" class="pane">
+        <div class="card">
+          <div class="card-title">Transaction Records</div>
+          <div class="searchbar">
+            <span style="color:var(--ink3)">⌕</span>
+            <input id="txSearch" placeholder="Search by description, amount, date or type..." oninput="filterTxns()">
+          </div>
+          <div class="tbl-wrap" id="txnTable">
+            <div class="empty-state"><div class="es-icon">🔄</div><p>No transactions yet</p></div>
+          </div>
+          <div class="txn-cards" id="txnMobile">
+            <div class="empty-state"><div class="es-icon">🔄</div><p>No transactions yet</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── HISTORY ── -->
+      <div id="pane-history" class="pane">
+        <div class="card">
+          <div class="card-title">Score History</div>
+          <div id="histWrap">
+            <div class="empty-state"><div class="es-icon">📈</div><p>No history yet</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PROFILE ── -->
+      <div id="pane-profile" class="pane">
+        <div class="profile-hero">
+          <div class="profile-avatar" id="profAva">?</div>
+          <div>
+            <h3 id="profName">—</h3>
+            <p id="profPhone">—</p>
+            <div class="profile-tier-badge tier-gold" id="profBadge">Gold Tier</div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Account Details</div>
+            <div id="profDetails"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Achievements</div>
+            <div id="profAchievements"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">🔒 Security &amp; Privacy</div>
+          <div class="data-row">
+            <span class="dr-label">Biometric Login</span>
+            <div class="toggle-wrap">
+              <label class="toggle"><input type="checkbox" id="bioToggle" onchange="document.getElementById('bioLabel').textContent=this.checked?'Enabled':'Disabled'"><span class="toggle-slider"></span></label>
+              <span id="bioLabel" style="font-size:11px;color:var(--ink3)">Disabled</span>
+            </div>
+          </div>
+          <div class="data-row"><span class="dr-label">OCR Processing</span><span class="dr-value" style="color:var(--go);font-size:12px">✅ 100% Local (Tesseract)</span></div>
+          <div class="data-row"><span class="dr-label">Data Storage</span><span class="dr-value" style="font-size:12px">Local SQLite — your device only</span></div>
+          <div class="data-row"><span class="dr-label">External APIs</span><span class="dr-value" style="color:var(--go);font-size:12px">✅ None — fully offline</span></div>
+          <button class="btn-danger-full" onclick="doLogout()">Sign Out of Account</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Navigation (mobile) -->
+  <nav class="bottomnav">
+    <div class="bnav-item active" onclick="goTab('overview',null,0)"><div class="ni">📊</div><div class="nl">Overview</div></div>
+    <div class="bnav-item" onclick="goTab('loan',null,1)"><div class="ni">💳</div><div class="nl">Loan</div></div>
+    <div class="bnav-item" onclick="goTab('transactions',null,2)"><div class="ni">🔄</div><div class="nl">Txns</div></div>
+    <div class="bnav-item" onclick="goTab('history',null,3)"><div class="ni">📈</div><div class="nl">History</div></div>
+    <div class="bnav-item" onclick="goTab('profile',null,4)"><div class="ni">👤</div><div class="nl">Profile</div></div>
+  </nav>
+</div>
+
+<!-- ═══════════════════ UPLOAD WIZARD ═══════════════════ -->
+<div class="modal-overlay" id="wizardOverlay">
+  <div class="wizard">
+    <div class="wizard-handle"></div>
+    <div class="wiz-header">
+      <div class="wiz-title">Upload Transaction Evidence</div>
+      <div class="wiz-sub">More screenshots = higher accuracy = larger loan amount</div>
+      <div class="src-tabs">
+        <div class="src-tab active" onclick="setSource('shots',this)">📷 Screenshots (OCR)</div>
+        <div class="src-tab" onclick="setSource('csv',this)">📄 CSV Import</div>
+      </div>
+    </div>
+
+    <div class="wiz-body">
+      <!-- SCREENSHOTS PANEL -->
+      <div id="wpShots" class="wiz-panel active">
+        <div class="infobox purple">
+          <div class="infobox-title">🤖 How Multi-Month OCR Works</div>
+          Each screenshot contains a batch of your mobile money transactions. The AI converts each image to black &amp; white, extracts every MTN/Airtel transaction using pattern recognition, then calculates your real average monthly income to predict your exact loan eligibility.
+        </div>
+        <div class="screenshots-grid" id="shotsGrid"></div>
+        <div class="upload-progress">
+          <div class="up-count">Screenshots added: <span class="num" id="upCount">0</span> / 5</div>
+          <div class="up-hint">Minimum 2 required · 5 recommended for maximum loan amount</div>
+          <div class="up-bar-track"><div class="up-bar-fill" id="upBarFill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- CSV PANEL -->
+      <div id="wpCsv" class="wiz-panel">
+        <div class="infobox blue">
+          <div class="infobox-title">📄 CSV File Format</div>
+          Your CSV must contain these exact columns:
+          <code>date,type,amount
+2026-01-15,credit,450000
+2026-01-18,debit,85000
+2026-02-01,credit,500000</code>
+        </div>
+        <div class="drop-area">
+          <input type="file" id="csvInput" accept=".csv" onchange="onCsvSelect(this)">
+          <div class="da-icon">📄</div>
+          <div class="da-title">Choose CSV File</div>
+          <div class="da-sub">Click to browse or drag &amp; drop your .csv file</div>
+        </div>
+        <div class="selected-file" id="csvSelected">
+          <div style="font-size:24px">📋</div>
+          <div>
+            <div class="sf-name" id="csvFileName"></div>
+            <div class="sf-size" id="csvFileSize"></div>
+          </div>
+          <span class="sf-clear" onclick="clearCsv()">✕</span>
+        </div>
+      </div>
+
+      <!-- PROCESSING STATE -->
+      <div class="processing-overlay" id="processingOverlay">
+        <div class="loading-ring"></div>
+        <div class="po-steps" id="poSteps"></div>
+        <div class="po-progress"><div class="po-fill" id="poFill" style="width:0%"></div></div>
+      </div>
+
+      <!-- SHOT RESULTS -->
+      <div class="shot-results-list" id="shotResultsList" style="display:none"></div>
+
+      <div class="err-box" id="wizErr"></div>
+    </div>
+
+    <div class="wiz-footer">
+      <button class="btn-cancel" onclick="closeWizard()">Cancel</button>
+      <button class="btn-analyze" id="analyzeBtn" onclick="doAnalyze()">🤖 Analyze Now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   CONSTANTS & STATE
+═══════════════════════════════════════════ */
+const API = 'http://127.0.0.1:5000';
+const MAX_SHOTS = 5;
+let user = null;
+let uploadSource = 'shots';
+let slots = Array(MAX_SHOTS).fill(null); // {file, dataUrl}
+let chart = null;
+let allTxns = [];
+let loanMeta = null;
+let progTimer = null;
+let stepIdx = 0;
+
+/* ═══════════════════════════════════════════
+   PAGE ROUTING
+═══════════════════════════════════════════ */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ═══════════════════════════════════════════
+   TAB ROUTING
+═══════════════════════════════════════════ */
+function goTab(tab, dtEl, bnIdx) {
+  // desktop
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  if (dtEl) dtEl.classList.add('active');
+  else {
+    const map = {overview:0,loan:1,transactions:2,history:3,profile:4};
+    document.querySelectorAll('.tab-btn')[map[tab]]?.classList.add('active');
+  }
+  // bottom nav
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+  if (bnIdx !== null && bnIdx !== undefined)
+    document.querySelectorAll('.bnav-item')[bnIdx]?.classList.add('active');
+  // panes
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('pane-' + tab).classList.add('active');
+  // lazy-load
+  if (tab === 'transactions') loadTransactions();
+  if (tab === 'history') loadHistory();
+  if (tab === 'profile') loadProfile();
+}
+
+/* ═══════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════ */
+async function doRegister() {
+  const name=gv('rName'), phone=gv('rPhone'), pass=gv('rPass'), prov=gv('rProv');
+  hide('rErr'); hide('rOk');
+  if (!name||!phone||!pass) { show('rErr','Please fill in all fields.'); return; }
+  try {
+    const r = await api('/register', {name,phone,password:pass,provider:prov});
+    const d = await r.json();
+    if (r.ok) { show('rOk','✅ Account created! Taking you to sign in...'); setTimeout(()=>showPage('login'),1400); }
+    else show('rErr', d.error||'Registration failed.');
+  } catch { show('rErr','❌ Cannot reach server. Is Flask running?'); }
+}
+
+async function doLogin() {
+  const phone=gv('lPhone'), pass=gv('lPass');
+  hide('lErr');
+  if (!phone||!pass) { show('lErr','Enter your phone and password.'); return; }
+  try {
+    const r = await api('/login', {phone,password:pass});
+    const d = await r.json();
+    if (r.ok) {
+      user = d;
+      // Setup topnav
+      setText('tnName', user.name);
+      setText('tnProv', user.provider + ' Mobile Money');
+      setText('tnAva', user.name[0].toUpperCase());
+      setText('shGreeting', 'Good day, ' + user.name.split(' ')[0] + ' 👋');
+      showPage('dash');
+      loadDashboard();
+    } else show('lErr', d.error||'Login failed.');
+  } catch { show('lErr','❌ Cannot reach server. Is Flask running?'); }
+}
+
+function doLogout() {
+  user = null;
+  if (chart) { chart.destroy(); chart = null; }
+  showPage('land');
+}
+
+/* ═══════════════════════════════════════════
+   DASHBOARD LOAD
+═══════════════════════════════════════════ */
+async function loadDashboard() {
+  try {
+    const r = await fetch(API + '/dashboard/' + user.user_id);
+    const d = await r.json();
+    if (!r.ok) return;
+    const {summary:s, latest_score:ls, score_trend:st} = d;
+
+    setText('kpiTxn', s.total_transactions||'0');
+    setText('kpiScan', s.total_scans||'0');
+
+    if (ls) {
+      paintScore(ls.score);
+      const n_shots = ls.screenshots_used || 1;
+      const mi = ls.avg_credit_amount || (ls.total_income / n_shots);
+      const ms = ls.avg_debit_amount  || (ls.total_spending / n_shots);
+      setText('kpiInc', mi > 0 ? 'UGX '+fmt(mi) : '—');
+      setText('kpiSpd', ms > 0 ? 'UGX '+fmt(ms) : '—');
+      setText('kpiSav', 'UGX '+fmt(ls.net_savings||0));
+      setText('kpiShot', ls.screenshots_used||'—');
+      setText('shSub', `Last analyzed: ${(ls.computed_at||'').slice(0,10)} · ${ls.screenshots_used||1} screenshot${ls.screenshots_used>1?'s':''}`);
+      showShotDots(ls.screenshots_used||0);
+      renderSplit(ls.total_income, ls.total_spending, ls.screenshots_used||1);
+    }
+    if (st && st.length) renderTrend(st);
+  } catch(e) { console.error('[dashboard]', e); }
+}
+
+/* ═══════════════════════════════════════════
+   SCORE RENDERING
+═══════════════════════════════════════════ */
+function paintScore(score) {
+  const el = document.getElementById('scoreNum');
+  el.textContent = score + '%';
+  const cls = score>=80?'gold':score>=65?'silver':score>=50?'bronze':'none';
+  el.className = 'score-num ' + cls;
+  const tier = score>=80?'Gold':score>=65?'Silver':score>=50?'Bronze':'None';
+  document.getElementById('scoreTierWrap').innerHTML =
+    `<div class="score-tier tier-${tier.toLowerCase()}" style="margin-top:8px">${tier} Tier</div>`;
+}
+
+function showShotDots(n) {
+  const wrap = document.getElementById('shotProgress');
+  wrap.style.display = 'flex';
+  document.getElementById('shotDotRow').innerHTML =
+    Array.from({length:MAX_SHOTS}, (_,i) => `<div class="shot-dot${i<n?' filled':''}" style="display:inline-block;margin-right:5px"></div>`).join('');
+  setText('shotLabel', n + '/' + MAX_SHOTS + ' months of data');
+}
+
+/* ═══════════════════════════════════════════
+   BREAKDOWN
+═══════════════════════════════════════════ */
+function renderBreakdown(bd) {
+  const factors = [
+    {k:'income_stability',    l:'📈 Income Stability',    c:'#00C896', w:'25%'},
+    {k:'spending_discipline', l:'💰 Spending Discipline',  c:'#4A90FF', w:'25%'},
+    {k:'transaction_activity',l:'🔄 Transaction Activity', c:'#8B68FF', w:'15%'},
+    {k:'savings_behavior',    l:'🏦 Savings Behavior',     c:'#D4A017', w:'20%'},
+    {k:'balance_trend',       l:'📊 Balance Trend',        c:'#FF9F7F', w:'10%'},
+    {k:'repayment_capacity',  l:'💳 Repayment Capacity',   c:'#FF6FB5', w:'5%'},
+  ];
+  document.getElementById('bdWrap').innerHTML = factors.map(f => `
+    <div class="bd-row">
+      <div class="bd-header">
+        <span class="bd-label">${f.l} <span style="font-size:10px;color:var(--ink3)">(${f.w})</span></span>
+        <span class="bd-pct" style="color:${f.c}">${bd[f.k]||0}%</span>
+      </div>
+      <div class="bd-track"><div class="bd-fill" style="background:${f.c}" data-w="${bd[f.k]||0}%"></div></div>
+    </div>`).join('');
+  setTimeout(() => document.querySelectorAll('.bd-fill').forEach(el => el.style.width = el.dataset.w), 80);
+}
+
+/* ═══════════════════════════════════════════
+   SPLIT BAR
+═══════════════════════════════════════════ */
+function renderSplit(income, spending, shots) {
+  shots = shots||1;
+  const mi = income/shots, ms = spending/shots;
+  const total = (mi+ms)||1;
+  const ip = Math.round(mi/total*100);
+  document.getElementById('splitWrap').innerHTML = `
+    <div class="split-note">Monthly averages across ${shots} screenshot${shots>1?'s':''}</div>
+    <div class="split-track">
+      <div class="split-income" style="width:${ip}%"></div>
+      <div class="split-spend"  style="width:${100-ip}%"></div>
+    </div>
+    <div class="split-legend">
+      <span><span class="split-dot" style="background:var(--go)"></span>Income ${ip}% — UGX ${fmt(mi)}/mo</span>
+      <span><span class="split-dot" style="background:var(--no)"></span>Spend ${100-ip}% — UGX ${fmt(ms)}/mo</span>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   TREND CHART (Chart.js)
+═══════════════════════════════════════════ */
+function renderTrend(trend) {
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  if (chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: trend.map(t => t.date ? t.date.slice(5) : ''),
+      datasets: [{
+        data: trend.map(t => t.score),
+        borderColor: '#D4A017',
+        backgroundColor: 'rgba(212,160,23,.07)',
+        borderWidth: 2,
+        pointBackgroundColor: '#D4A017',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        tension: .4,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {display:false},
+        tooltip: {
+          backgroundColor:'#111B2E', borderColor:'rgba(212,160,23,.3)', borderWidth:1,
+          callbacks: {label: c => ' Score: ' + c.parsed.y + '%'}
+        }
+      },
+      scales: {
+        x: {grid:{color:'rgba(255,255,255,.03)'}, ticks:{color:'#5A6E8A', font:{size:10}}},
+        y: {grid:{color:'rgba(255,255,255,.03)'}, ticks:{color:'#5A6E8A', font:{size:10}}, min:0, max:100}
+      }
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════
+   TIPS
+═══════════════════════════════════════════ */
+function renderTips(tips) {
+  if (!tips||!tips.length) return;
+  document.getElementById('tipsWrap').innerHTML = tips.map(t => `
+    <div class="tip-card">
+      <div class="tip-icon">${t.icon}</div>
+      <div class="tip-title">${t.title}</div>
+      <div class="tip-body">${t.body}</div>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════
+   LOAN TAB
+═══════════════════════════════════════════ */
+function renderLoan(loan, shots) {
+  loanMeta = loan;
+  const yes = loan.eligible;
+  document.getElementById('loanWrap').innerHTML = `
+    <div class="loan-verdict ${yes?'approved':'declined'}">
+      <div class="loan-verdict-status">${yes?'✅ Loan Approved':'❌ Not Eligible Yet'}</div>
+      <div class="loan-amount">${loan.max_loan_fmt||'UGX 0'}</div>
+      <div class="loan-basis">
+        ${yes
+          ? `Calculated from <strong>${shots||loan.screenshots_used||1} screenshot${(shots||loan.screenshots_used||1)>1?'s':''}</strong> of your mobile money transactions. Average income per screenshot: <strong>${loan.avg_income_per_shot_fmt||'N/A'}</strong>. Your disposable amount per screenshot of <strong>${loan.disposable_per_shot_fmt||'N/A'}</strong> supports repayments of <strong>${loan.max_monthly_repayment_fmt||'N/A'}/period</strong>.`
+          : loan.message
+        }
+      </div>
+      ${yes ? `<div class="loan-details-grid">
+        <div class="loan-detail"><div class="ld-value">${loan.monthly_payment_fmt}</div><div class="ld-label">Monthly Payment</div></div>
+        <div class="loan-detail"><div class="ld-value">${loan.duration}</div><div class="ld-label">Duration</div></div>
+        <div class="loan-detail"><div class="ld-value">${loan.interest_fmt}</div><div class="ld-label">Interest Rate</div></div>
+        <div class="loan-detail"><div class="ld-value">${loan.total_repayment_fmt}</div><div class="ld-label">Total Repayment</div></div>
+        <div class="loan-detail"><div class="ld-value">${loan.total_interest_fmt}</div><div class="ld-label">Total Interest</div></div>
+        <div class="loan-detail"><div class="ld-value">${loan.dti_ratio}%</div><div class="ld-label">Debt-to-Income</div></div>
+      </div>
+      <div class="income-analysis">
+        <div class="ia-title">📊 Income Verification Summary</div>
+        <div class="ia-row"><span class="ia-label">Screenshots Analysed</span><span class="ia-value">${shots||loan.screenshots_used||1} screenshots</span></div>
+        <div class="ia-row"><span class="ia-label">Total Income Extracted</span><span class="ia-value" style="color:var(--go)">${loan.avg_income_per_shot_fmt ? 'UGX '+fmt(loan.avg_income_per_shot * (shots||loan.screenshots_used||1)) : 'N/A'}</span></div>
+        <div class="ia-row"><span class="ia-label">Avg Income Per Screenshot</span><span class="ia-value" style="color:var(--go)">${loan.avg_income_per_shot_fmt||'N/A'}</span></div>
+        <div class="ia-row"><span class="ia-label">Avg Spending Per Screenshot</span><span class="ia-value" style="color:var(--no)">${loan.avg_spending_per_shot_fmt||'N/A'}</span></div>
+        <div class="ia-row"><span class="ia-label">Disposable Per Screenshot</span><span class="ia-value" style="color:var(--go)">${loan.disposable_per_shot_fmt||'N/A'}</span></div>
+        <div class="ia-row"><span class="ia-label">Max Repayment Capacity (35%)</span><span class="ia-value" style="color:var(--amber-l)">${loan.max_monthly_repayment_fmt||'N/A'}</span></div>
+        <div class="ia-row"><span class="ia-label">Income Multiplier Applied</span><span class="ia-value">${loan.income_multiplier}×</span></div>
+      </div>
+      <p style="font-size:12px;color:var(--ink2);line-height:1.7">${loan.message}</p>` : `
+      <div class="card" style="margin-top:0">
+        <div class="card-title">How to Qualify for a Loan</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:2">
+          📌 Upload all 5 monthly screenshots for the most complete income picture.<br>
+          📌 Ensure regular deposits every month — consistency is key to income stability.<br>
+          📌 Keep spending below 55% of your income each month.<br>
+          📌 Save at least 20% of each amount received into your mobile wallet.<br>
+          📌 Avoid clusters of large withdrawals in a single period.
+        </div>
+      </div>`}
+    </div>`;
+
+  const calcWrap = document.getElementById('calcWrap');
+  if (yes) {
+    calcWrap.style.display = 'block';
+    const sl = document.getElementById('loanSlider');
+    sl.max = loan.max_loan;
+    sl.value = Math.round(loan.max_loan * 0.5 / 10000) * 10000;
+    document.getElementById('sliderMax').textContent = 'UGX ' + fmt(loan.max_loan);
+    updateCalc();
+  } else calcWrap.style.display = 'none';
+}
+
+function updateCalc() {
+  if (!loanMeta||!loanMeta.eligible) return;
+  const amt = parseInt(document.getElementById('loanSlider').value);
+  const rate = loanMeta.interest_rate||0.22;
+  const months = loanMeta.duration_months||12;
+  const mr = rate / 12;
+  const monthly = mr > 0 ? Math.round(amt*mr/(1-(1+mr)**(-months))) : Math.round(amt/months);
+  const total = monthly * months;
+  const interest = total - amt;
+  setText('sliderLabel', 'UGX ' + fmt(amt));
+  document.getElementById('calcResult').innerHTML = `
+    <div class="calc-item"><div class="ci-v">UGX ${fmt(monthly)}</div><div class="ci-l">Monthly Payment</div></div>
+    <div class="calc-item"><div class="ci-v">UGX ${fmt(interest)}</div><div class="ci-l">Total Interest</div></div>
+    <div class="calc-item"><div class="ci-v">UGX ${fmt(total)}</div><div class="ci-l">Total Repayment</div></div>`;
+}
+
+/* ═══════════════════════════════════════════
+   TRANSACTIONS
+═══════════════════════════════════════════ */
+async function loadTransactions() {
+  const tableEl = document.getElementById('txnTable');
+  const mobEl   = document.getElementById('txnMobile');
+  tableEl.innerHTML = '<div style="padding:24px;text-align:center"><div class="loading-ring"></div></div>';
+  mobEl.innerHTML   = '<div style="padding:24px;text-align:center"><div class="loading-ring"></div></div>';
+  try {
+    const r = await fetch(API + '/transactions/' + user.user_id);
+    const d = await r.json();
+    allTxns = d.transactions || [];
+    renderTxns(allTxns);
+  } catch {
+    tableEl.innerHTML = '<div class="empty-state"><p>Failed to load transactions.</p></div>';
+  }
+}
+
+function filterTxns() {
+  const q = document.getElementById('txSearch').value.toLowerCase();
+  renderTxns(allTxns.filter(t =>
+    (t.description||'').toLowerCase().includes(q) ||
+    (t.type||'').includes(q) ||
+    String(t.amount).includes(q) ||
+    (t.date||'').includes(q)
+  ));
+}
+
+function renderTxns(txns) {
+  if (!txns.length) {
+    const e = '<div class="empty-state"><div class="es-icon">🔄</div><p>No transactions found</p></div>';
+    document.getElementById('txnTable').innerHTML = e;
+    document.getElementById('txnMobile').innerHTML = e;
+    return;
+  }
+  // Desktop table
+  document.getElementById('txnTable').innerHTML = `
+    <table class="txn-table">
+      <thead><tr><th>Date</th><th>Type</th><th>Amount (UGX)</th><th>Source</th><th>Description</th></tr></thead>
+      <tbody>${txns.map(t=>`<tr>
+        <td style="font-family:var(--mono);font-size:11px;color:var(--ink2)">${t.date||'—'}</td>
+        <td><span class="type-badge ${t.type}">${t.type.toUpperCase()}</span></td>
+        <td style="font-family:var(--mono);font-weight:600;color:${t.type==='credit'?'var(--go)':'var(--no)'}">${fmt(t.amount)}</td>
+        <td><span class="src-badge ${t.source||'csv'}">${t.source==='image'?'📷 OCR':'📄 CSV'}</span></td>
+        <td style="color:var(--ink2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.description||''}</td>
+      </tr>`).join('')}</tbody>
+    </table>`;
+  // Mobile cards
+  document.getElementById('txnMobile').innerHTML = txns.map(t => `
+    <div class="txn-card-mob">
+      <div class="tcm-left">
+        <div class="tcm-icon ${t.type}">${t.type==='credit'?'⬆':'⬇'}</div>
+        <div>
+          <div class="tcm-desc">${(t.description||t.type).substring(0,42)}</div>
+          <div class="tcm-date">${t.date||'—'}</div>
+        </div>
+      </div>
+      <div>
+        <div class="tcm-amt" style="color:${t.type==='credit'?'var(--go)':'var(--no)'}">${t.type==='credit'?'+':'-'}${fmt(t.amount)}</div>
+        <span class="src-badge ${t.source||'csv'}" style="display:block;text-align:right;margin-top:4px">${t.source==='image'?'📷':'📄'}</span>
+      </div>
+    </div>`).join('');
+}
+
+/* ═══════════════════════════════════════════
+   HISTORY
+═══════════════════════════════════════════ */
+async function loadHistory() {
+  document.getElementById('histWrap').innerHTML = '<div style="padding:24px;text-align:center"><div class="loading-ring"></div></div>';
+  try {
+    const r = await fetch(API + '/history/' + user.user_id);
+    const d = await r.json();
+    if (!d.history.length) {
+      document.getElementById('histWrap').innerHTML = '<div class="empty-state"><div class="es-icon">📈</div><p>No history yet</p></div>';
+      return;
+    }
+    document.getElementById('histWrap').innerHTML = d.history.map((h, i) => {
+      const col = h.score>=80?'var(--amber-l)':h.score>=65?'#90CAF9':h.score>=50?'#FBA144':'var(--no)';
+      const tier = h.score>=80?'Gold':h.score>=65?'Silver':h.score>=50?'Bronze':'None';
+      const prev = d.history[i+1];
+      const arrow = prev ? (h.score>prev.score?'▲':h.score<prev.score?'▼':'—') : '—';
+      const arrowCol = prev ? (h.score>prev.score?'var(--go)':h.score<prev.score?'var(--no)':'var(--ink3)') : 'var(--ink3)';
+      return `<div class="hist-row">
+        <div class="hist-left">
+          <div>
+            <span class="hist-score" style="color:${col}">${h.score}%</span>
+            <span class="hist-trend-arrow" style="color:${arrowCol}">${arrow}</span>
+            <span class="score-tier tier-${tier.toLowerCase()}" style="font-size:9px;margin-left:6px">${tier}</span>
+            <div class="hist-meta">
+              Avg Income/shot: UGX ${fmt(h.avg_credit_amount||0)} &nbsp;·&nbsp;
+              Loan: UGX ${fmt(h.loan_recommended||0)} &nbsp;·&nbsp;
+              ${h.total_transactions} txns
+            </div>
+          </div>
+        </div>
+        <div class="hist-right">
+          <div class="hist-date">${(h.computed_at||'').slice(0,10)}</div>
+          <div class="hist-shots">📷 ${h.screenshots_used||1} screenshot${(h.screenshots_used||1)>1?'s':''}</div>
+          <div style="font-size:10px;color:var(--ink3)">Scan #${d.history.length-i}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch { document.getElementById('histWrap').innerHTML = '<div class="empty-state"><p>Failed to load</p></div>'; }
+}
+
+/* ═══════════════════════════════════════════
+   PROFILE
+═══════════════════════════════════════════ */
+async function loadProfile() {
+  try {
+    const r = await fetch(API + '/dashboard/' + user.user_id);
+    const d = await r.json();
+    if (!r.ok) return;
+    const {user:u, latest_score:ls, summary:s} = d;
+    const score = ls ? ls.score : 0;
+    const tier = score>=80?'Gold':score>=65?'Silver':score>=50?'Bronze':'None';
+
+    setText('profAva', u.name[0].toUpperCase());
+    setText('profName', u.name);
+    setText('profPhone', u.phone + ' · ' + u.provider);
+    const pb = document.getElementById('profBadge');
+    pb.textContent = tier + ' Tier Member';
+    pb.className = 'profile-tier-badge tier-' + tier.toLowerCase();
+
+    document.getElementById('profDetails').innerHTML = [
+      ['Full Name', u.name],
+      ['Phone', u.phone],
+      ['Provider', u.provider + ' Mobile Money'],
+      ['Member Since', u.member_since||'—'],
+      ['Trust Score', `<span style="font-family:var(--mono);color:var(--amber-l)">${score}%</span>`],
+      ['Avg Monthly Income', ls ? 'UGX '+fmt(ls.avg_monthly_income||0) : '—'],
+      ['Max Loan Approved', ls && ls.loan_recommended ? 'UGX '+fmt(ls.loan_recommended) : '—'],
+      ['Total Analyses', s.total_scans],
+      ['Total Transactions', s.total_transactions],
+    ].map(([l,v]) => `<div class="data-row"><span class="dr-label">${l}</span><span class="dr-value">${v}</span></div>`).join('');
+
+    const shots = ls?.screenshots_used||0;
+    const achs = [];
+    if (s.total_scans >= 1) achs.push(['🥇','First Analysis','Completed your first AI trust score analysis']);
+    if (s.total_scans >= 5) achs.push(['🔁','Power Analyst','Run 5 or more trust score analyses']);
+    if (s.total_transactions >= 20) achs.push(['📊','Active Transactor','Logged 20+ mobile money transactions']);
+    if (shots >= 5) achs.push(['📷','Full Evidence Pack','Uploaded all 5 screenshots — maximum accuracy']);
+    if (score >= 50)  achs.push(['🥉','Bronze Status','Achieved 50%+ trust score']);
+    if (score >= 65)  achs.push(['🥈','Silver Status','Achieved 65%+ trust score']);
+    if (score >= 80)  achs.push(['⭐','Gold Status','Achieved Gold tier — highest loan access']);
+    if (!achs.length) achs.push(['🎯','Getting Started','Upload 5 screenshots to start earning achievements']);
+
+    document.getElementById('profAchievements').innerHTML = achs.map(([ico,title,desc]) => `
+      <div class="ach-row">
+        <div class="ach-icon">${ico}</div>
+        <div><div class="ach-title">${title}</div><div class="ach-desc">${desc}</div></div>
+      </div>`).join('');
+  } catch(e) { console.error('[profile]', e); }
+}
+
+/* ═══════════════════════════════════════════
+   WIZARD — SLOT SYSTEM
+═══════════════════════════════════════════ */
+function buildSlotsUI() {
+  document.getElementById('shotsGrid').innerHTML =
+    Array.from({length:MAX_SHOTS}, (_,i) => `
+      <label class="shot-slot" id="slot-${i}" for="slotInput-${i}">
+        <div class="slot-placeholder"><div class="si">📷</div><div class="sn">Screenshot ${i+1}</div></div>
+        <img class="slot-preview" id="slotImg-${i}" src="" alt="">
+        <button class="slot-remove" type="button" onclick="event.preventDefault();event.stopPropagation();removeSlot(${i})">✕</button>
+        <input class="slot-file-input" type="file" accept="image/*" id="slotInput-${i}" onchange="onSlotFile(${i},this)">
+      </label>`).join('');
+}
+
+function triggerSlot(i) {
+  // No longer needed — label handles it
+}
+
+function onSlotFile(i, inp) {
+  if (!inp.files[0]) return;
+  const file = inp.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    slots[i] = {file, dataUrl: e.target.result};
+    document.getElementById('slotImg-'+i).src = e.target.result;
+    document.getElementById('slot-'+i).classList.add('has-image');
+    refreshProgress();
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeSlot(i) {
+  slots[i] = null;
+  document.getElementById('slotImg-'+i).src = '';
+  document.getElementById('slot-'+i).classList.remove('has-image');
+  document.getElementById('slotInput-'+i).value = '';
+  refreshProgress();
+}
+
+function refreshProgress() {
+  const n = slots.filter(Boolean).length;
+  setText('upCount', n);
+  document.getElementById('upBarFill').style.width = (n/MAX_SHOTS*100) + '%';
+}
+
+/* ═══════════════════════════════════════════
+   WIZARD — OPEN / CLOSE
+═══════════════════════════════════════════ */
+function openWizard(source) {
+  document.getElementById('wizardOverlay').classList.add('open');
+  resetWizard();
+  if (source === 'csv') {
+    setSource('csv', document.querySelectorAll('.src-tab')[1]);
+  }
+}
+
+function closeWizard() {
+  document.getElementById('wizardOverlay').classList.remove('open');
+  stopProgress();
+}
+
+function resetWizard() {
+  slots = Array(MAX_SHOTS).fill(null);
+  buildSlotsUI();
+  refreshProgress();
+  clearCsv();
+  hide('wizErr');
+  document.getElementById('processingOverlay').style.display = 'none';
+  document.getElementById('shotResultsList').style.display = 'none';
+  document.getElementById('analyzeBtn').disabled = false;
+  document.getElementById('poFill').style.width = '0%';
+}
+
+function setSource(src, el) {
+  uploadSource = src;
+  document.querySelectorAll('.src-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.wiz-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('wp' + src.charAt(0).toUpperCase() + src.slice(1)).classList.add('active');
+  hide('wizErr');
+}
+
+function onCsvSelect(inp) {
+  if (!inp.files[0]) return;
+  const f = inp.files[0];
+  setText('csvFileName', f.name);
+  setText('csvFileSize', (f.size/1024).toFixed(1) + ' KB');
+  document.getElementById('csvSelected').classList.add('visible');
+}
+function clearCsv() {
+  document.getElementById('csvInput').value = '';
+  document.getElementById('csvSelected').classList.remove('visible');
+}
+
+/* ═══════════════════════════════════════════
+   WIZARD — PROCESSING ANIMATION
+═══════════════════════════════════════════ */
+const SHOT_STEPS = [
+  '🖤 Converting images to black & white...',
+  '🔍 Running OCR on Screenshot 1...',
+  '🔍 Running OCR on Screenshot 2...',
+  '🔍 Running OCR on Screenshot 3...',
+  '🧠 Pattern matching MTN/Airtel transactions...',
+  '📊 Calculating monthly income averages...',
+  '💳 Running loan prediction model...',
+  '✅ Finalizing results...',
+];
+const CSV_STEPS = [
+  '📄 Parsing CSV rows...',
+  '🧮 Calculating totals...',
+  '📊 Computing trust score...',
+  '💳 Predicting loan eligibility...',
+];
+
+function startProgress(isShots) {
+  document.getElementById('processingOverlay').style.display = 'block';
+  hide('shotResultsList');
+  stepIdx = 0;
+  const steps = isShots ? SHOT_STEPS : CSV_STEPS;
+  const rate  = isShots ? 0.9 : 3.5;
+  let p = 0;
+
+  function renderSteps(active) {
+    document.getElementById('poSteps').innerHTML = steps.map((s,i) => `
+      <div class="po-step ${i < active ? 'done' : i === active ? 'active' : ''}">
+        <div class="po-dot"></div>${s}
+      </div>`).join('');
+  }
+  renderSteps(0);
+
+  if (progTimer) clearInterval(progTimer);
+  progTimer = setInterval(() => {
+    p = Math.min(p + rate, 91);
+    document.getElementById('poFill').style.width = p + '%';
+    const si = Math.min(Math.floor(p / (91/steps.length)), steps.length-1);
+    if (si !== stepIdx) { stepIdx = si; renderSteps(si); }
+  }, 380);
+}
+
+function stopProgress() {
+  if (progTimer) clearInterval(progTimer);
+  document.getElementById('poFill').style.width = '100%';
+}
+
+/* ═══════════════════════════════════════════
+   WIZARD — ANALYZE
+═══════════════════════════════════════════ */
+async function doAnalyze() {
+  hide('wizErr');
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+
+  try {
+    let res, data;
+
+    if (uploadSource === 'shots') {
+      const filled = slots.filter(Boolean);
+      if (filled.length < 2) {
+        showErr('wizErr', 'Please upload at least 2 screenshots. 5 screenshots give you the highest possible loan amount.');
+        btn.disabled = false; return;
+      }
+      startProgress(true);
+      const fd = new FormData();
+      filled.forEach(s => fd.append('screenshots', s.file));
+      res = await fetch(API + '/upload-screenshots/' + user.user_id, {method:'POST', body:fd});
+
+    } else {
+      const fi = document.getElementById('csvInput');
+      if (!fi.files[0]) {
+        showErr('wizErr', 'Please select a CSV file first.');
+        btn.disabled = false; return;
+      }
+      startProgress(false);
+      const fd = new FormData();
+      fd.append('file', fi.files[0]);
+      res = await fetch(API + '/upload/' + user.user_id, {method:'POST', body:fd});
+    }
+
+    stopProgress();
+    data = await res.json();
+    btn.disabled = false;
+
+    if (res.ok) {
+      // Show per-screenshot results if available
+      if (data.per_screenshot) {
+        const rl = document.getElementById('shotResultsList');
+        rl.style.display = 'block';
+        rl.innerHTML = data.per_screenshot.map(s => `
+          <div class="shot-result ${s.status}">
+            <div class="sr-status">${s.status==='ok'?'✅':'❌'}</div>
+            <div class="sr-name">Screenshot ${s.index}</div>
+            <div class="sr-count">${s.status==='ok' ? s.txns+' transactions found' : s.error||'Failed'}</div>
+          </div>`).join('');
+        await sleep(2000); // Let user see results
+      }
+      closeWizard();
+      applyResults(data);
+    } else {
+      showErr('wizErr', data.error || 'Something went wrong. Please try again.');
+      if (data.per_screenshot) {
+        const rl = document.getElementById('shotResultsList');
+        rl.style.display = 'block';
+        rl.innerHTML = data.per_screenshot.map(s => `
+          <div class="shot-result ${s.status}">
+            <div class="sr-status">${s.status==='ok'?'✅':'❌'}</div>
+            <div class="sr-name">Screenshot ${s.index}</div>
+            <div class="sr-count">${s.status==='ok' ? s.txns+' txns' : s.error||'Failed'}</div>
+          </div>`).join('');
+      }
+    }
+  } catch(e) {
+    stopProgress(); btn.disabled = false;
+    showErr('wizErr', 'Cannot reach the backend. Make sure Flask is running: python app.py');
+  }
+}
+
+/* ═══════════════════════════════════════════
+   APPLY RESULTS
+═══════════════════════════════════════════ */
+function applyResults(data) {
+  const shots = data.screenshots_processed || 1;
+  paintScore(data.trust_score);
+  renderBreakdown(data.breakdown);
+  renderTips(data.tips||[]);
+  renderLoan(data.loan_recommendation, shots);
+  renderSplit(data.total_income, data.total_spending, shots);
+
+  // Update KPIs
+  const loan_r = data.loan_recommendation || {};
+  setText('kpiInc', loan_r.avg_income_per_shot_fmt || (data.total_income > 0 ? 'UGX '+fmt(data.total_income) : '—'));
+  setText('kpiSpd', loan_r.avg_spending_per_shot_fmt || (data.total_spending > 0 ? 'UGX '+fmt(data.total_spending) : '—'));
+  setText('kpiSav', 'UGX ' + fmt(data.net_savings||0));
+  setText('kpiTxn', data.total_transactions||0);
+  setText('kpiShot', shots);
+  setText('shSub', `${shots} screenshot${shots>1?'s':''} analyzed · Updated just now ✅`);
+
+  showShotDots(shots);
+  goTab('overview'); // Switch to overview
+  loadDashboard();   // Refresh dashboard data
+}
+
+/* ═══════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════ */
+const gv = id => document.getElementById(id)?.value?.trim()||'';
+const setText = (id, v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+const hide = id => { const e=document.getElementById(id); if(e) e.style.display='none'; };
+const fmt = n => Math.round(Number(n||0)).toLocaleString('en-UG');
+const sleep = ms => new Promise(res => setTimeout(res, ms));
+
+function show(id, msg) {
+  const e = document.getElementById(id);
+  e.textContent = msg; e.style.display = 'block';
+}
+function showErr(id, msg) {
+  const e = document.getElementById(id);
+  e.textContent = '❌ ' + msg; e.style.display = 'block';
+}
+async function api(path, body) {
+  return fetch(API + path, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+}
+
+// Init
+buildSlotsUI();
+</script>
+</body>
+</html>
